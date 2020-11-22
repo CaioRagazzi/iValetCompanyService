@@ -1,6 +1,6 @@
 
 import { Injectable, Inject } from '@nestjs/common';
-import { InsertResult, Repository } from 'typeorm';
+import { DeleteResult, InsertResult, Repository } from 'typeorm';
 import { Company } from './company.entity';
 import { CompanyInsertDto } from './dto/company-insert.dto';
 
@@ -33,5 +33,17 @@ export class CompanyService {
     }
 
     return company;
+  }
+
+  async deleteById(companyId: number): Promise<DeleteResult> {
+    const companyToDelete = await this.findOneById(companyId);
+
+    if (!companyToDelete) {
+      throw new Error('Company does not exists!');
+    }
+
+    const deleteResult = await this.companyRepository.delete(companyId);
+
+    return deleteResult;
   }
 }

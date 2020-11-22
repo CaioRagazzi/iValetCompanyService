@@ -1,6 +1,6 @@
-import { Body, Controller, Get, HttpException, HttpStatus, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post } from '@nestjs/common';
 import { get } from 'http';
-import { ObjectLiteral } from 'typeorm';
+import { DeleteResult, ObjectLiteral } from 'typeorm';
 import { Company } from './company.entity';
 import { CompanyService } from './company.service';
 import { CompanyInsertDto } from './dto/company-insert.dto';
@@ -27,6 +27,17 @@ export class CompanyController {
             const company = await this.companyService.findOneById(id);
 
             return company;
+        } catch (error) {
+            throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Delete(':companyId')
+    async deleteById(@Param('companyId') companyId: number): Promise<DeleteResult>{
+        try {
+            const deleteResult = await this.companyService.deleteById(companyId);
+
+            return deleteResult;
         } catch (error) {
             throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
         }
